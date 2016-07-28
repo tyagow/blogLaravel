@@ -1,6 +1,11 @@
 @extends('main')
 
 @section('title', '| Edit Post')
+@section('stylesheets')
+
+	{!! Html::style('css/select2.css') !!}
+	
+@endsection
 
 @section('content')
 
@@ -17,12 +22,14 @@
 
 			{{ Form::select('category_id', $categories,null,['class' => 'form-control']) }}
 
-				{{-- <select class="form-control" name="category_id">
-					@foreach ($categories as $category)
-						<option value='{{ $category->id}}'>{{ $category->name }}</option>
-					@endforeach
+			{{ Form::label('tags', 'Tags:', ['class' => 'form-spacing-top']) }}
+			{{ Form::select('tags[]', $tags,null, ['class' => 'select2-multi form-control','multiple' => 'multiple']) }}
 
-				</select>	 --}}
+			{{-- <select class="form-control select2-multi" name="tags[]" multiple="multiple">
+				@foreach ($tags as $tag)
+				  <option value='{{ $tag->id }}'>{{ $tag->name }}</option>
+				@endforeach
+			</select> --}}
 
 			{{ Form::label('body', 'Body:', ['class' => 'form-spacing-top']) }}
 			{{ Form::textarea('body', null,['class' => 'form-control input-lg']) }}
@@ -57,3 +64,12 @@
 	
 	
 @stop
+@section('scripts')
+
+	{!! Html::script('js/select2.full.js')!!}
+	<script type="text/javascript">
+		$('.select2-multi').select2();
+		$('.select2-multi').select2().val({!! json_encode($post->tags()->getRelatedIds()) !!}).trigger('change');
+	</script>
+
+@endsection
